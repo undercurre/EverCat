@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="js" setup>
 import { ref } from "vue";
 
 const count = ref(0);
