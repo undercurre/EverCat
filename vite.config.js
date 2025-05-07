@@ -5,7 +5,14 @@ import electron from "vite-plugin-electron";
 export default defineConfig({
   base: "./",
   plugins: [
-    vue(),
+    vue({
+      // 增加模板编译选项（处理中文等特殊字符）
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => false,
+        },
+      },
+    }),
     electron({
       main: {
         entry: "main.js",

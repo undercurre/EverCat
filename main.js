@@ -39,6 +39,16 @@ app.whenReady().then(() => {
   });
 });
 
+// 实现窗口拖动
+app.on("window-drag", (event, { mouseX, mouseY }) => {
+  const [currentX, currentY] = win.getPosition();
+  win.setPosition(currentX + mouseX, currentY + mouseY);
+});
+
+app.on("set-always-on-top", (event, flag) => {
+  BrowserWindow.getFocusedWindow().setAlwaysOnTop(flag);
+});
+
 // 除了 macOS 外，当所有窗口都被关闭的时候退出程序。 因此, 通常
 // 对应用程序和它们的菜单栏来说应该时刻保持激活状态,
 // 直到用户使用 Cmd + Q 明确退出

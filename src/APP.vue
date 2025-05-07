@@ -1,16 +1,14 @@
 <template>
   <div class="container">
-    <h1>Electron + Vue 3</h1>
-    <p>Count: {{ count }}</p>
-    <button @click="increment">Increment</button>
+    <h1>番茄钟</h1>
+    <TimerComponent />
+    <TaskList />
   </div>
 </template>
 
 <script lang="js" setup>
-import { ref } from "vue";
-
-const count = ref(0);
-const increment = () => count.value++;
+import TaskList from "./components/TaskList.vue";
+import TimerComponent from "./components/TimerComponent.vue";
 </script>
 
 <style>

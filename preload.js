@@ -12,3 +12,10 @@ window.addEventListener("DOMContentLoaded", () => {
     replaceText(`${dependency}-version`, process.versions[dependency]);
   }
 });
+
+const { contextBridge, ipcRenderer } = require("electron");
+
+contextBridge.exposeInMainWorld("electronAPI", {
+  setAlwaysOnTop: (flag) => ipcRenderer.send("set-always-on-top", flag),
+  windowDrag: (data) => ipcRenderer.send("window-drag", data),
+});
