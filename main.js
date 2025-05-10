@@ -11,6 +11,14 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
+      webSecurity: true,
+      nodeIntegration: true,
+      contextIsolation: true,
+      contentSecurityPolicy: {
+        "default-src": "'self'",
+        "style-src": "'self' 'unsafe-inline'", // 允许样式内联
+        "script-src": "'self'",
+      },
     },
   });
 

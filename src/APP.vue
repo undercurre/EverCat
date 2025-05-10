@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <h1>番茄钟</h1>
+    <JumpingText />
     <TimerComponent />
     <TaskList />
   </div>
@@ -9,6 +10,7 @@
 <script lang="js" setup>
 import TaskList from "./components/TaskList.vue";
 import TimerComponent from "./components/TimerComponent.vue";
+import JumpingText from "./components/JumpingText.vue";
 </script>
 
 <style>
