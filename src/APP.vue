@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <JumpingText />
-    <SplitTextMenu class="pt-20px" />
+    <SplitTextMenu />
     <router-view></router-view>
   </div>
 </template>

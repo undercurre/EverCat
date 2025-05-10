@@ -57,6 +57,7 @@ const currentMode = ref(modes.WORK);
 const totalSeconds = ref(currentMode.value.duration);
 const remainingSeconds = ref(totalSeconds.value);
 const isStarted = ref(false);
+let timer = null;
 
 // 修改后的开始计时方法
 function startTimer(mode) {
