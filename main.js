@@ -25,7 +25,7 @@ const createWindow = () => {
   // 开发环境加载 Vite 服务器
   if (process.env.NODE_ENV === "development") {
     mainWindow.loadURL("http://localhost:3000");
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadFile("dist/index.html");
   }

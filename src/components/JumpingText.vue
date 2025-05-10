@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="box">
     <div class="loading">
       <span
         v-for="(letter, index) in letters"
@@ -41,19 +41,18 @@ const letters = ref("Misson".split(""));
   @return $shadows;
 }
 
-.container {
+.box {
   display: flex;
-  height: 100vh;
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: #2980b9;
+  background: transparent;
 }
 
 .loading {
   display: flex;
-  color: white;
-  font-size: 5em;
+  color: #eeeeee;
+  font-size: 100px;
   font-family: "Baloo Bhaijaan", cursive;
   text-transform: uppercase;
 
