@@ -10,7 +10,22 @@
     "start": "vite electron",
     "electron:start": "electron-forge start",
     "electron:package": "electron-forge package",
-    "electron:make": "electron-forge make"
+    "electron:make": "electron-forge make  --platform=win32 --arch=x64"
+  },
+  "config": {
+    "forge": {
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "EverCat",
+            "authors": "lirh42",
+            "iconUrl": "https://rbaigctool-1307270943.cos.ap-beijing.myqcloud.com/2025-05-11/05-31-8f5e9c22-730b-435e-b9fb-4eedf6e02dee970240fb-7ef4-4c20-87ff-0ad4355176b5.png?imageMogr2/format/webp",
+            "setupIcon": "src/assets/icon.ico"
+          }
+        }
+      ]
+    }
   },
   "author": "",
   "license": "ISC",
@@ -38,7 +53,9 @@
   "dependencies": {
     "@vitejs/plugin-vue": "^5.2.3",
     "electron-squirrel-startup": "^1.0.1",
+    "gsap": "^3.13.0",
     "vue": "^3.5.13",
-    "vue-loader": "^17.4.2"
+    "vue-loader": "^17.4.2",
+    "vue-router": "^4.5.1"
   }
 }

@@ -2,14 +2,12 @@
   <div class="container">
     <JumpingText />
     <SplitTextMenu class="pt-20px" />
-    <TaskList />
+    <router-view></router-view>
   </div>
 </template>
 
 <script lang="js" setup>
-import TaskList from "./components/TaskList.vue";
 import SplitTextMenu from "./components/SplitTextMenu.vue";
-import TimerComponent from "./components/TimerComponent.vue";
 import JumpingText from "./components/JumpingText.vue";
 </script>
 

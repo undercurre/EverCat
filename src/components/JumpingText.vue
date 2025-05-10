@@ -15,7 +15,7 @@
 <script setup>
 import { ref } from "vue";
 
-const letters = ref("Misson".split(""));
+const letters = ref("EverCat".split(""));
 </script>
 
 <style lang="scss" scoped>

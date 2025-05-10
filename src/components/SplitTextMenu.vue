@@ -1,14 +1,14 @@
 <template>
   <ul class="split-menu">
     <li v-for="(item, index) in menuItems" :key="index">
-      <a href="#">
-        <span class="primary" :data-text="splitText(item).primary">{{
-          splitText(item).primary
+      <router-link :to="item.path">
+        <span class="primary" :data-text="splitText(item.title).primary">{{
+          splitText(item.title).primary
         }}</span>
-        <span class="secondary" :data-text="splitText(item).secondary">{{
-          splitText(item).secondary
+        <span class="secondary" :data-text="splitText(item.title).secondary">{{
+          splitText(item.title).secondary
         }}</span>
-      </a>
+      </router-link>
     </li>
   </ul>
 </template>
@@ -16,7 +16,10 @@
 <script setup>
 import { ref } from "vue";
 
-const menuItems = ref(["Mission List", "Tomato Clock"]);
+const menuItems = ref([
+  { title: "Mission List", path: "/todo" },
+  { title: "Tomato Clock", path: "/clock" },
+]);
 
 const splitText = (text) => {
   const words = text.split(" ");
