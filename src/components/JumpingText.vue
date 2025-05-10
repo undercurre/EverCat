@@ -4,7 +4,7 @@
       <span
         v-for="(letter, index) in letters"
         :key="index"
-        :style="{ animationDelay: `${index / 10}s` }"
+        :style="{ animationDelay: `${index / 60}s` }"
       >
         {{ letter }}
       </span>
@@ -15,10 +15,10 @@
 <script setup>
 import { ref } from "vue";
 
-const letters = ref("任务清单".split(""));
+const letters = ref("Misson".split(""));
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css?family=Baloo+Bhaijaan&display=swap");
 
 @function float-text-3d($shadow-color: #bbb, $depth: 10, $floating: false) {
