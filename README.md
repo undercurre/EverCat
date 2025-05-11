@@ -24,3 +24,9 @@ ELECTRON_MIRROR=http://npmmirror.com/mirrors/electron/
     nrm use taobao
     npx electron-forge import
 ```
+
+# package exe for windows
+
+```bash
+    npm run build && npm run electron:make
+```

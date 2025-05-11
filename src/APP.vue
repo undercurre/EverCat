@@ -9,6 +9,7 @@
 <script lang="js" setup>
 import SplitTextMenu from "./components/SplitTextMenu.vue";
 import JumpingText from "./components/JumpingText.vue";
+import { RouterView } from 'vue-router'
 </script>
 
 <style lang="scss">

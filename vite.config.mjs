@@ -3,17 +3,17 @@ import vue from "@vitejs/plugin-vue";
 import electron from "vite-plugin-electron";
 import Unocss from "unocss/vite"; // 新增导入
 
-export default defineConfig({
+const mainConfig = {
   base: "./",
+  plugins: [vue(), Unocss()],
+  server: {
+    port: 3000,
+  },
+};
+
+const electronConfig = {
   plugins: [
-    vue({
-      // 增加模板编译选项（处理中文等特殊字符）
-      template: {
-        compilerOptions: {
-          isCustomElement: (tag) => false,
-        },
-      },
-    }),
+    vue(),
     Unocss(),
     electron({
       main: {
@@ -21,7 +21,10 @@ export default defineConfig({
       },
     }),
   ],
-  server: {
-    port: 3000,
-  },
+};
+
+export default defineConfig(({ command }) => {
+  return command === "build"
+    ? mainConfig
+    : { ...mainConfig, ...electronConfig };
 });
