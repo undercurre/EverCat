@@ -4,6 +4,8 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("node:path");
 
+let logFolderPath = app.getPath("documents") + "\\EverCat\\";
+
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -47,6 +49,35 @@ app.whenReady().then(() => {
   });
 });
 
+app.handle("select-folder", async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ["openDirectory"],
+  });
+  if (!result.canceled) {
+    logFolderPath = result.filePaths[0];
+  }
+  return logFolderPath;
+});
+
+app.handle("get-log-folder", () => logFolderPath);
+
+app.handle("save-log", (_, logData) => {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const logPath = path.join(logFolderPath, `evercat-log-${timestamp}.json`);
+
+  fs.writeFileSync(
+    logPath,
+    JSON.stringify(
+      {
+        timestamp: new Date().toISOString(),
+        log: logData,
+      },
+      null,
+      2
+    )
+  );
+});
+
 // 实现窗口拖动
 app.on("window-drag", (event, { mouseX, mouseY }) => {
   const [currentX, currentY] = win.getPosition();
@@ -66,3 +97,15 @@ app.on("window-all-closed", () => {
 
 // 在当前文件中你可以引入所有的主进程代码
 // 也可以拆分成几个文件，然后用 require 导入。
+
+app.on("before-quit", () => {
+  const logData = {
+    lastOperation: "应用关闭",
+    todoItems: JSON.parse(localStorage.getItem("todo") || "[]"),
+    timerState: JSON.parse(localStorage.getItem("timerState") || "{}"),
+  };
+
+  // 发送日志到渲染进程
+  const mainWindow = BrowserWindow.getAllWindows()[0];
+  mainWindow.webContents.send("save-final-log", logData);
+});

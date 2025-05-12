@@ -10,6 +10,13 @@
 import SplitTextMenu from "./components/SplitTextMenu.vue";
 import JumpingText from "./components/JumpingText.vue";
 import { RouterView } from 'vue-router'
+import { onMounted } from 'vue'
+
+onMounted(() => {
+  window.electronAPI.saveFinalLog((logData) => {
+    window.electronAPI.saveLog(logData)
+  })
+})
 </script>
 
 <style lang="scss">

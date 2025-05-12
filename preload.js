@@ -18,4 +18,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("electronAPI", {
   setAlwaysOnTop: (flag) => ipcRenderer.send("set-always-on-top", flag),
   windowDrag: (data) => ipcRenderer.send("window-drag", data),
+  selectLogFolder: () => ipcRenderer.invoke("select-folder"),
+  getLogFolder: () => ipcRenderer.invoke("get-log-folder"),
+  saveLog: (logData) => ipcRenderer.invoke("save-log", logData),
 });
