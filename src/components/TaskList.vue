@@ -109,12 +109,21 @@ export default {
     return {
       newitem: "",
       sortByStatus: false,
-      todo: [
+      todo: JSON.parse(localStorage.getItem("todo")) || [
+        // 初始化时读取本地存储
         { id: 1, label: "Learn VueJs", done: true },
         { id: 2, label: "Code a todo list", done: false },
         { id: 3, label: "Learn something else", done: false },
       ],
     };
+  },
+  watch: {
+    todo: {
+      handler(newVal) {
+        localStorage.setItem("todo", JSON.stringify(newVal)); // 监听变化自动保存
+      },
+      deep: true,
+    },
   },
   methods: {
     addItem() {
@@ -177,8 +186,22 @@ h1 span {
 }
 
 ul {
+  height: 100%;
   margin-top: 2.6rem;
   list-style: none;
+  padding-right: 8px; /* 给滚动条留空间 */
+}
+
+/* 可选：美化滚动条 */
+ul::-webkit-scrollbar {
+  width: 6px;
+}
+ul::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+ul::-webkit-scrollbar-thumb {
+  background: #00adb5;
+  border-radius: 3px;
 }
 
 li {

@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onUnmounted } from "vue";
+import { ref, computed, watchEffect, onMounted, onUnmounted } from "vue";
 import ProgressCube from "./ProgressCube.vue";
 
 // 新增模式状态
@@ -54,16 +54,65 @@ const modes = {
 };
 
 const currentMode = ref(modes.WORK);
+const endTimestamp = ref(null);
 const totalSeconds = ref(currentMode.value.duration);
 const remainingSeconds = ref(totalSeconds.value);
 const isStarted = ref(false);
+const isEnded = ref(false);
 let timer = null;
+
+const STORAGE_KEY = "timerState";
+
+function loadState() {
+  try {
+    const storedData = localStorage.getItem(STORAGE_KEY);
+    if (storedData) {
+      const saved = JSON.parse(storedData);
+      currentMode.value =
+        Object.values(modes).find((m) => m.label === saved.modeLabel) ||
+        modes.WORK;
+      endTimestamp.value = saved.endTimestamp;
+      // 通过endTimestamp计算remainingSeconds
+      const now = Date.now();
+      const elapsed = Math.max(0, endTimestamp.value - now);
+      remainingSeconds.value = Math.floor(elapsed / 1000);
+      totalSeconds.value = currentMode.value.duration;
+      isStarted.value = saved.isStarted;
+      isEnded.value = saved.isEnded;
+
+      // 如果计时器原本在运行中，重新启动
+      if (isStarted.value && !isEnded.value) {
+        startTimer(currentMode.value);
+      }
+    }
+  } catch (e) {
+    console.warn("Failed to load timer state:", e);
+  }
+}
+
+function saveState() {
+  const state = {
+    modeLabel: currentMode.value.label,
+    endTimestamp: endTimestamp.value,
+    isStarted: isStarted.value,
+    isEnded: isEnded.value,
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+// 组件挂载时加载状态
+onMounted(loadState);
 
 // 修改后的开始计时方法
 function startTimer(mode) {
   currentMode.value = mode;
   totalSeconds.value = mode.duration;
-  remainingSeconds.value = totalSeconds.value;
+  // 没有endTimestamp时，直接设置remainingSeconds
+  if (!endTimestamp.value) {
+    remainingSeconds.value = totalSeconds.value;
+    // 计算endTimestamp
+    endTimestamp.value = Date.now() + totalSeconds.value * 1000;
+  }
   isStarted.value = true;
 
   timer = setInterval(() => {
@@ -95,6 +144,7 @@ const minutes = computed(() =>
 const seconds = computed(() => remainingSeconds.value % 60);
 
 onUnmounted(() => {
+  saveState();
   clearInterval(timer);
 });
 </script>
