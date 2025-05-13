@@ -17,6 +17,13 @@
       >
         休息一下
       </button>
+      <button
+        v-if="isStarted || isEnded"
+        @click="resetTimer"
+        class="mode-btn restart"
+      >
+        重新开始
+      </button>
     </div>
     <div v-if="isStarted && !isEnded" class="time-container">
       <div class="time-unit">
@@ -100,6 +107,17 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function resetTimer() {
+  clearInterval(timer);
+  currentMode.value = modes.WORK;
+  endTimestamp.value = null;
+  remainingSeconds.value = currentMode.value.duration;
+  totalSeconds.value = currentMode.value.duration;
+  isStarted.value = false;
+  isEnded.value = false;
+  saveState(); // 重置后立即保存状态
+}
+
 // 组件挂载时加载状态
 onMounted(loadState);
 
@@ -176,6 +194,11 @@ onUnmounted(() => {
 
   &.break {
     background: #4caf50;
+    color: white;
+  }
+
+  &.restart {
+    background: #ff5722;
     color: white;
   }
 }
