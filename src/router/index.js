@@ -17,6 +17,11 @@ const routes = [
     name: "Clock",
     component: TimerComponent,
   },
+  {
+    path: "/setting",
+    name: "Settings",
+    component: () => import("../components/Settings.vue"),
+  },
 ];
 
 const router = createRouter({
