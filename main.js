@@ -1,7 +1,7 @@
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("node:path");
 
 let logFolderPath = app.getPath("documents") + "\\EverCat\\";
@@ -49,7 +49,7 @@ app.whenReady().then(() => {
   });
 });
 
-app.handle("select-folder", async () => {
+ipcMain.handle("select-folder", async () => {
   const result = await dialog.showOpenDialog({
     properties: ["openDirectory"],
   });
@@ -59,9 +59,9 @@ app.handle("select-folder", async () => {
   return logFolderPath;
 });
 
-app.handle("get-log-folder", () => logFolderPath);
+ipcMain.handle("get-log-folder", () => logFolderPath);
 
-app.handle("save-log", (_, logData) => {
+ipcMain.handle("save-log", (_, logData) => {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const logPath = path.join(logFolderPath, `evercat-log-${timestamp}.json`);
 
