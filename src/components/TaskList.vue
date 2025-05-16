@@ -8,7 +8,7 @@
           :class="{ done: item.done }"
         >
           <span class="label">{{ item.label }}</span>
-          <div class="actions">
+          <div class="actions flex items-center">
             <button
               class="btn-picto"
               type="button"
@@ -154,12 +154,15 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="css" scoped>
 #todolist {
-  padding: 0 2rem;
-  max-width: 500px;
+  width: 80%;
+  box-sizing: border-box;
   background: transparent;
   color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 h1 {
@@ -186,10 +189,8 @@ h1 span {
 }
 
 ul {
-  height: 100%;
   margin-top: 2.6rem;
   list-style: none;
-  padding-right: 8px; /* 给滚动条留空间 */
 }
 
 /* 可选：美化滚动条 */
@@ -205,9 +206,11 @@ ul::-webkit-scrollbar-thumb {
 }
 
 li {
+  width: 100%;
   display: flex;
-  margin: 0 -3rem 4px;
-  padding: 1.1rem 3rem;
+  box-sizing: border-box;
+  margin: 2px;
+  padding: 6px 10px;
   justify-content: space-between;
   align-items: center;
   background: rgba(255, 255, 255, 0.1);
@@ -215,7 +218,6 @@ li {
 
 .actions {
   flex-shrink: 0;
-  padding-left: 0.7em;
 }
 
 .label {
@@ -269,7 +271,6 @@ form input {
   flex-grow: 1;
   border: none;
   background: #f7f1f1;
-  padding: 0 1.5em;
   font-size: initial;
 }
 

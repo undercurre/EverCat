@@ -42,14 +42,22 @@ const letters = ref("EverCat".split(""));
 }
 
 .box {
+  position: relative;
+  width: 100%;
+  height: 140px;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   background: transparent;
+  overflow: hidden;
 }
 
 .loading {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
   display: flex;
   color: #eeeeee;
   font-size: 100px;

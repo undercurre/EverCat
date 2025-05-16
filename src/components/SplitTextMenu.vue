@@ -37,8 +37,10 @@ const splitText = (text) => {
   --primary-color: #00adb5;
   --secondary-color: #eeeeee;
   --border-color: #d2d5e4;
-
+  width: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
   list-style-type: none;
   padding: 0;
   margin: 0;

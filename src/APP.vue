@@ -1,5 +1,7 @@
 <template>
-  <div class="container">
+  <div
+    class="w-full bg-#222831 flex flex-col items-center justify-center min-h-vh pb-20px"
+  >
     <JumpingText />
     <SplitTextMenu />
     <router-view></router-view>
@@ -38,11 +40,9 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss">
-@import "./styles/reset.scss";
-
+<style lang="scss" scoped>
 .container {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   text-align: center;
   background-color: #222831;

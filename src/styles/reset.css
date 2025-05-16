@@ -16,12 +16,18 @@ ol[class] {
   list-style: none;
 }
 
+html {
+  width: 100vw;
+  height: 100vh;
+}
+
 /* 设置核心 body 参数（配合 Electron 窗口透明特性） */
 body {
   min-height: 100vh;
   line-height: 1.5;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
+  margin: 0;
   background-color: transparent; // 适配 Electron 透明背景
 }
 
