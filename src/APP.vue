@@ -34,9 +34,7 @@ const go2Setting = () => {
 }
 
 onMounted(() => {
-  window.electronAPI.saveFinalLog((logData) => {
-    window.electronAPI.saveLog(logData)
-  })
+  window.electronAPI.saveLog('APP start')
 })
 </script>
 

@@ -1,5 +1,7 @@
 <template>
-  <div class="settings text-#fff w-full mt-20px">
+  <div
+    class="flex flex-col justify-center items-center text-#fff mt-20px box-border"
+  >
     <p>
       当前日志路径：<button
         class="bg-#00adb5 p-8px rounded-6px text-#fff"
@@ -22,5 +24,6 @@ async function selectFolder() {
 
 onMounted(async () => {
   logPath.value = await window.electronAPI.getLogFolder();
+  console.log("logPath.value", logPath.value);
 });
 </script>

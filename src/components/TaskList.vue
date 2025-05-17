@@ -132,6 +132,14 @@ export default {
         label: this.newitem,
         done: false,
       });
+      window.electronAPI.saveLog({
+        tag: "add-task",
+        value: {
+          id: Math.floor(Math.random() * 9999) + 10,
+          label: this.newitem,
+          done: false,
+        },
+      });
       this.newitem = "";
     },
     markAsDoneOrUndone(item) {

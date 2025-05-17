@@ -3,9 +3,10 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("node:path");
+const fs = require("node:fs");
 
-let logFolderPath = app.getPath("documents") + "\\EverCat\\";
-
+const documentsPath = app.getPath("documents");
+let logFolderPath = path.join(documentsPath, "EverCat"); // 使用path.join代替字符串拼接
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -40,6 +41,10 @@ const createWindow = () => {
 // 和创建浏览器窗口的时候调用
 // 部分 API 在 ready 事件触发后才能使用。
 app.whenReady().then(() => {
+  if (!fs.existsSync(logFolderPath)) {
+    fs.mkdirSync(logFolderPath, { recursive: true }); // recursive确保完整创建嵌套目录
+  }
+
   createWindow();
 
   app.on("activate", () => {
@@ -62,20 +67,31 @@ ipcMain.handle("select-folder", async () => {
 ipcMain.handle("get-log-folder", () => logFolderPath);
 
 ipcMain.handle("save-log", (_, logData) => {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const logPath = path.join(logFolderPath, `evercat-log-${timestamp}.json`);
+  const datePart = new Date().toLocaleDateString("sv"); // 输出示例："2024-05-01"
+  const logPath = path.join(logFolderPath, `evercat-log-${datePart}.json`);
 
-  fs.writeFileSync(
-    logPath,
-    JSON.stringify(
-      {
-        timestamp: new Date().toISOString(),
-        log: logData,
-      },
-      null,
-      2
-    )
-  );
+  try {
+    // 读取已有日志或初始化空数组
+    let logs = [];
+    if (fs.existsSync(logPath)) {
+      const fileContent = fs.readFileSync(logPath, "utf-8");
+      logs = JSON.parse(fileContent);
+      if (!Array.isArray(logs)) {
+        logs = []; // 处理文件内容损坏的情况
+      }
+    }
+
+    // 添加新日志记录
+    logs.push({
+      timestamp: new Date().toISOString(),
+      log: logData,
+    });
+
+    // 写入更新后的日志
+    fs.writeFileSync(logPath, JSON.stringify(logs, null, 2));
+  } catch (e) {
+    console.error("日志保存失败:", e);
+  }
 });
 
 // 实现窗口拖动
