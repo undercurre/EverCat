@@ -21,7 +21,7 @@
           "config": {
             "name": "EverCat",
             "authors": "lirh42",
-            "iconUrl": "https://rbaigctool-1307270943.cos.ap-beijing.myqcloud.com/2025-05-11/05-31-8f5e9c22-730b-435e-b9fb-4eedf6e02dee970240fb-7ef4-4c20-87ff-0ad4355176b5.png?imageMogr2/format/webp",
+            "iconUrl": "src/assets/tray-ico.ico",
             "setupIcon": "src/assets/icon.ico"
           }
         }

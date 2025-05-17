@@ -1,17 +1,52 @@
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, Tray, Menu } = require("electron");
 const path = require("node:path");
 const fs = require("node:fs");
 
 const documentsPath = app.getPath("documents");
 let logFolderPath = path.join(documentsPath, "EverCat"); // 使用path.join代替字符串拼接
+
+let tray = null;
+
+function createTray(win) {
+  const iconPath = path.join(__dirname, "src/assets/tray-ico.ico");
+  if (!fs.existsSync(iconPath)) {
+    console.error("托盘图标文件不存在:", iconPath);
+    return;
+  }
+  tray = new Tray(iconPath);
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "显示窗口",
+      click: () => {
+        win.show();
+        win.focus();
+      },
+    },
+    {
+      label: "退出",
+      click: () => app.quit(),
+    },
+  ]);
+
+  tray.setToolTip("EverCat");
+  tray.setContextMenu(contextMenu);
+
+  // 点击托盘图标切换窗口显示
+  tray.on("click", () => {
+    win.isVisible() ? win.hide() : win.show();
+  });
+}
+
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1000,
     height: 600,
+    icon: path.join(__dirname, "src/assets/icon.ico"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       webSecurity: true,
@@ -35,6 +70,12 @@ const createWindow = () => {
 
   // 打开开发工具
   // mainWindow.webContents.openDevTools()
+  mainWindow.on("close", (event) => {
+    event.preventDefault();
+    mainWindow.hide(); // 隐藏窗口而不是关闭
+  });
+
+  createTray(mainWindow);
 };
 
 // 这段程序将会在 Electron 结束初始化
@@ -114,14 +155,24 @@ app.on("window-all-closed", () => {
 // 在当前文件中你可以引入所有的主进程代码
 // 也可以拆分成几个文件，然后用 require 导入。
 
-app.on("before-quit", () => {
+app.on("before-quit", async () => {
+  const mainWindow = BrowserWindow.getAllWindows()[0];
+
+  // 通过IPC请求渲染进程发送数据
+  const [todoItems, timerState] = await Promise.all([
+    mainWindow.webContents.executeJavaScript(
+      'localStorage.getItem("todo") || "[]"'
+    ),
+    mainWindow.webContents.executeJavaScript(
+      'localStorage.getItem("timerState") || "{}"'
+    ),
+  ]);
+
   const logData = {
     lastOperation: "应用关闭",
-    todoItems: JSON.parse(localStorage.getItem("todo") || "[]"),
-    timerState: JSON.parse(localStorage.getItem("timerState") || "{}"),
+    todoItems: JSON.parse(todoItems),
+    timerState: JSON.parse(timerState),
   };
 
-  // 发送日志到渲染进程
-  const mainWindow = BrowserWindow.getAllWindows()[0];
   mainWindow.webContents.send("save-final-log", logData);
 });
