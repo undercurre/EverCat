@@ -1,10 +1,12 @@
 <template>
   <div
-    class="w-full bg-#222831 flex flex-col items-center justify-center min-h-vh pb-20px"
+    class="w-100vw bg-#222831 flex flex-col items-center justify-center min-h-vh pb-20px box-border"
   >
     <JumpingText />
     <SplitTextMenu />
-    <router-view></router-view>
+    <div class="w-full box-border p-20px flex justify-center overflow-hidden">
+      <router-view></router-view>
+    </div>
     <div class="absolute right-20px top-10px" @click="go2Setting">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -42,6 +44,7 @@ onMounted(() => {
 .container {
   width: 100%;
   min-height: 100vh;
+  box-sizing: border-box;
   text-align: center;
   background-color: #222831;
   display: flex;

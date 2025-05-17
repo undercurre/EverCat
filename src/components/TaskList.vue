@@ -218,7 +218,7 @@ li {
   display: flex;
   box-sizing: border-box;
   margin: 2px;
-  padding: 6px 10px;
+  padding: 10px 20px;
   justify-content: space-between;
   align-items: center;
   background: rgba(255, 255, 255, 0.1);

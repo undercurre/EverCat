@@ -19,10 +19,13 @@ ol[class] {
 html {
   width: 100vw;
   height: 100vh;
+  box-sizing: border-box;
 }
 
 /* 设置核心 body 参数（配合 Electron 窗口透明特性） */
 body {
+  width: 100vw;
+  box-sizing: border-box;
   min-height: 100vh;
   line-height: 1.5;
   text-rendering: optimizeSpeed;

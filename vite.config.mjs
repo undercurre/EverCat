@@ -3,28 +3,16 @@ import vue from "@vitejs/plugin-vue";
 import electron from "vite-plugin-electron";
 import Unocss from "unocss/vite"; // 新增导入
 
-const mainConfig = {
+export default defineConfig(({ command }) => ({
   base: "./",
-  plugins: [vue(), Unocss()],
-  server: {
-    port: 3000,
-  },
-};
-
-const electronConfig = {
   plugins: [
     vue(),
     Unocss(),
-    electron({
-      main: {
-        entry: "main.js",
-      },
-    }),
+    command !== "build" &&
+      electron({
+        // 仅开发时启用 electron
+        main: { entry: "main.js" },
+      }),
   ],
-};
-
-export default defineConfig(({ command }) => {
-  return command === "build"
-    ? mainConfig
-    : { ...mainConfig, ...electronConfig };
-});
+  server: { port: 3000 },
+}));
