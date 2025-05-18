@@ -9,6 +9,8 @@ const documentsPath = app.getPath("documents");
 let logFolderPath = path.join(documentsPath, "EverCat"); // 使用path.join代替字符串拼接
 
 let tray = null;
+let mainWindow = null;
+let floatWindow = null;
 
 function createTray(win) {
   const iconPath = path.join(__dirname, "src/assets/tray-ico.ico");
@@ -43,7 +45,7 @@ function createTray(win) {
 
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1000,
     height: 600,
     icon: path.join(__dirname, "src/assets/icon.ico"),
@@ -78,6 +80,18 @@ const createWindow = () => {
   createTray(mainWindow);
 };
 
+function createFloatWindow() {
+  floatWindow = new BrowserWindow({
+    width: 200,
+    height: 150,
+    transparent: true, // 透明背景
+    frame: false, // 无边框
+    alwaysOnTop: true, // 置顶
+    webPreferences: { nodeIntegration: true, contextIsolation: false },
+  });
+  floatWindow.loadFile("float.html");
+}
+
 // 这段程序将会在 Electron 结束初始化
 // 和创建浏览器窗口的时候调用
 // 部分 API 在 ready 事件触发后才能使用。
@@ -87,11 +101,15 @@ app.whenReady().then(() => {
   }
 
   createWindow();
+  createFloatWindow();
 
   app.on("activate", () => {
     // 在 macOS 系统内, 如果没有已开启的应用窗口
     // 点击托盘图标时通常会重新创建一个新窗口
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+      createFloatWindow();
+    }
   });
 });
 
@@ -139,6 +157,11 @@ ipcMain.handle("save-log", (_, logData) => {
 app.on("window-drag", (event, { mouseX, mouseY }) => {
   const [currentX, currentY] = win.getPosition();
   win.setPosition(currentX + mouseX, currentY + mouseY);
+});
+
+// 处理窗口移动
+ipcMain.on("move-window", (event, x, y) => {
+  floatWindow.setPosition(x, y);
 });
 
 app.on("set-always-on-top", (event, flag) => {

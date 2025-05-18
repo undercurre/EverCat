@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.3); /* 半透明背景 */
+        border-radius: 10px;
+        color: white;
+      }
+      #drag-region {
+        -webkit-app-region: drag; /* 允许拖拽区域 */
+        height: 100%;
+        cursor: move;
+      }
+      .close-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+        -webkit-app-region: no-drag; /* 禁止拖拽 */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="drag-region">
+      悬浮窗内容
+      <div class="close-btn" onclick="window.close()">×</div>
+    </div>
+    <script>
+      const { ipcRenderer } = require("electron");
+
+      // 鼠标拖动逻辑
+      let dragging = false;
+      let startX, startY;
+
+      document
+        .getElementById("drag-region")
+        .addEventListener("mousedown", (e) => {
+          dragging = true;
+          startX = e.clientX;
+          startY = e.clientY;
+        });
+
+      window.addEventListener("mousemove", (e) => {
+        if (dragging) {
+          const deltaX = e.clientX - startX;
+          const deltaY = e.clientY - startY;
+          const x = window.screenLeft + deltaX;
+          const y = window.screenTop + deltaY;
+          ipcRenderer.send("move-window", x, y);
+        }
+      });
+
+      window.addEventListener("mouseup", () => {
+        dragging = false;
+      });
+    </script>
+  </body>
+</html>
