@@ -21,4 +21,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   selectLogFolder: () => ipcRenderer.invoke("select-folder"),
   getLogFolder: () => ipcRenderer.invoke("get-log-folder"),
   saveLog: (logData) => ipcRenderer.invoke("save-log", logData),
+  getFloatWindowState: () => ipcRenderer.invoke("getFloatWindowState"),
+  toggleFloatWindow: (state) => ipcRenderer.invoke("toggleFloatWindow", state),
+  onFloatWindowStateChange: (callback) =>
+    ipcRenderer.on("floatWindow-state-changed", callback),
 });

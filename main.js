@@ -90,6 +90,17 @@ function createFloatWindow() {
     webPreferences: { nodeIntegration: true, contextIsolation: false },
   });
   floatWindow.loadFile("float.html");
+
+  // 添加窗口就绪监听
+  floatWindow.webContents.on("did-finish-load", () => {
+    mainWindow.webContents.send("floatWindow-state-changed", true);
+  });
+
+  floatWindow.on("closed", () => {
+    floatWindow = null;
+    console.info("Float window closed", floatWindow);
+    mainWindow.webContents.send("floatWindow-state-changed", false);
+  });
 }
 
 // 这段程序将会在 Electron 结束初始化
@@ -151,6 +162,24 @@ ipcMain.handle("save-log", (_, logData) => {
   } catch (e) {
     console.error("日志保存失败:", e);
   }
+});
+
+ipcMain.handle("toggleFloatWindow", (_, state) => {
+  if (state && !floatWindow) {
+    createFloatWindow();
+    mainWindow.webContents.send("floatWindow-state-changed", true); // 新增状态同步
+  } else if (!state && floatWindow) {
+    floatWindow.close();
+    floatWindow = null;
+  }
+});
+
+ipcMain.handle("getFloatWindowState", () => {
+  return floatWindow !== null && !floatWindow.isDestroyed();
+});
+
+ipcMain.on("floatWindow-state-changed", (event, state) => {
+  mainWindow.webContents.send("floatWindow-state-changed", state);
 });
 
 // 实现窗口拖动
