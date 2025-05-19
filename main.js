@@ -1,7 +1,15 @@
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain, dialog, Tray, Menu } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  dialog,
+  Tray,
+  Menu,
+  screen,
+} = require("electron");
 const path = require("node:path");
 const fs = require("node:fs");
 
@@ -84,12 +92,25 @@ function createFloatWindow() {
   floatWindow = new BrowserWindow({
     width: 200,
     height: 150,
-    transparent: true, // 透明背景
-    frame: false, // 无边框
-    alwaysOnTop: true, // 置顶
-    webPreferences: { nodeIntegration: true, contextIsolation: false },
+    type: "toolbar",
+    frame: false,
+    resizable: false,
+    transparent: true,
+    alwaysOnTop: true,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
+      webSecurity: false,
+      preload: path.join(__dirname, "preload.js"),
+    },
   });
-  floatWindow.loadFile("float.html");
+  const { left, top } = {
+    left: screen.getPrimaryDisplay().workAreaSize.width - 160,
+    top: screen.getPrimaryDisplay().workAreaSize.height - 160,
+  };
+  floatWindow.setPosition(left, top); //设置悬浮球位置
+  floatWindow.loadFile("others/FloatBall/index.html");
 
   // 添加窗口就绪监听
   floatWindow.webContents.on("did-finish-load", () => {

@@ -1,0 +1,85 @@
+/* 基于现代浏览器标准的 CSS 重置 */
+@charset "UTF-8";
+
+/* Box sizing 规则 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 移除列表样式（适用于 Vue 中的 ul/li 组件） */
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 设置核心 body 参数（配合 Electron 窗口透明特性） */
+body {
+  width: 100vw;
+  box-sizing: border-box;
+  min-height: 100vh;
+  line-height: 1.5;
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  background-color: transparent; // 适配 Electron 透明背景
+}
+
+/* 媒体元素默认样式 */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 继承字体（保持跨组件字体一致性） */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* 移除所有动画和过渡（可根据需要开启） */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 暗色模式支持 */
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+/* 重置表单元素（适配 TaskList 组件样式） */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
