@@ -5,62 +5,47 @@ const app = createApp({
   // 数据选项
   data() {
     return {
-      message: "Hello Vue 3!",
-      todos: [
-        { id: 1, text: "学习 Vue" },
-        { id: 2, text: "练习项目" },
-      ],
+      isDragging: false,
+      isExpanded: false,
+      startX: 0,
+      startY: 0,
+      mouseDownTime: Date.now(),
     };
   },
   // 方法选项
   methods: {
-    reverseMessage() {
-      this.message = this.message.split("").reverse().join("");
-    },
-
     // 处理鼠标按下事件
     handleMouseDown(e) {
-      if (isExpanded.value) return; // 展开状态不允许拖动
+      if (this.isExpanded) return; // 展开状态不允许拖动
 
-      isDragging = false;
-      initialMouseX = e.screenX; // 使用screenX/screenY获取相对于屏幕的坐标
-      initialMouseY = e.screenY;
-      mouseDownTime = Date.now();
-      // 获取窗口初始位置
-      ipcRenderService.invoke("app:window:get-position").then(([x, y]) => {
-        windowInitialX = x;
-        windowInitialY = y;
-
-        document.addEventListener("mousemove", handleMouseMove);
-        document.addEventListener("mouseup", handleMouseUp);
-      });
+      this.isDragging = false;
+      this.startX = e.clientX; // 使用screenX/screenY获取相对于屏幕的坐标
+      this.startY = e.clientY;
+      this.mouseDownTime = Date.now();
     },
 
     // 处理鼠标移动事件
     handleMouseMove(e) {
-      const deltaX = e.screenX - initialMouseX;
-      const deltaY = e.screenY - initialMouseY;
+      const deltaX = e.clientX - this.startX;
+      const deltaY = e.clientY - this.startY;
 
       // 判断是否达到拖动阈值
-      if (!isDragging && (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5)) {
-        isDragging = true;
+      if (!this.isDragging && (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5)) {
+        this.isDragging = true;
       }
 
       if (isDragging) {
         // 计算新位置
-        const newX = windowInitialX + deltaX;
-        const newY = windowInitialY + deltaY;
+        const newX = this.startX + deltaX;
+        const newY = this.startY + deltaY;
 
         // 发送新位置到主进程
-        ipcRenderService.send("app:window:set-position", { x: newX, y: newY });
+        window.electronAPI.moveWindow(newX, newY);
       }
     },
     handleMouseUp() {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-
       // 如果不是拖拽且点击时间小于200ms，则触发展开/收起
-      if (!isDragging && Date.now() - mouseDownTime < 200) {
+      if (!this.isDragging && Date.now() - this.mouseDownTime < 200) {
         toggleExpand();
       }
     },
@@ -73,11 +58,5 @@ const app = createApp({
   },
 });
 
-// 注册全局组件
-app.component("todo-item", {
-  props: ["todo"],
-  template: `<li>{{ todo.text }}</li>`,
-});
-
 // 挂载应用
-app.mount("#app");
+app.mount("#floatApp");

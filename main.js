@@ -90,8 +90,8 @@ const createWindow = () => {
 
 function createFloatWindow() {
   floatWindow = new BrowserWindow({
-    width: 200,
-    height: 150,
+    width: 250,
+    height: 250,
     type: "toolbar",
     frame: false,
     resizable: false,
@@ -99,15 +99,15 @@ function createFloatWindow() {
     alwaysOnTop: true,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
       enableRemoteModule: true,
       webSecurity: false,
       preload: path.join(__dirname, "preload.js"),
     },
   });
   const { left, top } = {
-    left: screen.getPrimaryDisplay().workAreaSize.width - 160,
-    top: screen.getPrimaryDisplay().workAreaSize.height - 160,
+    left: screen.getPrimaryDisplay().workAreaSize.width - 200,
+    top: screen.getPrimaryDisplay().workAreaSize.height - 200,
   };
   floatWindow.setPosition(left, top); //设置悬浮球位置
   floatWindow.loadFile("others/FloatBall/index.html");
@@ -122,6 +122,8 @@ function createFloatWindow() {
     console.info("Float window closed", floatWindow);
     mainWindow.webContents.send("floatWindow-state-changed", false);
   });
+
+  floatWindow.webContents.openDevTools();
 }
 
 // 这段程序将会在 Electron 结束初始化
@@ -211,6 +213,10 @@ app.on("window-drag", (event, { mouseX, mouseY }) => {
 
 // 处理窗口移动
 ipcMain.on("move-window", (event, x, y) => {
+  console.info("move-window", {
+    x,
+    y,
+  });
   floatWindow.setPosition(x, y);
 });
 

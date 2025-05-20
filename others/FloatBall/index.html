@@ -9,37 +9,38 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
   <body>
-    <div
-      class="mini-window"
-      :class="{ 'expanded': isExpanded }"
-      @mousedown="handleMouseDown"
-      @mouseenter="handleMouseEnter"
-      @mouseleave="handleMouseLeave"
-    >
-      <!-- 折叠状态 -->
-      <div class="mini-content">
-        <span class="mini-bg"></span>
-      </div>
+    <div id="floatApp">
+      <div
+        class="mini-window"
+        :class="{ 'expanded': isExpanded }"
+        @mousedown="handleMouseDown"
+        @mouseenter="handleMouseEnter"
+        @mouseleave="handleMouseLeave"
+      >
+        <!-- 折叠状态 -->
+        <div class="mini-content">
+          <span class="mini-bg"></span>
+        </div>
 
-      <!-- 展开状态 -->
-      <div class="expanded-content" @click.stop>
-        <div class="actions">
-          <div class="action-item" @click="handleAction('restore')">
-            <el-icon><FullScreen /></el-icon>
-            <span>还原</span>
-          </div>
-          <div class="action-item" @click="handleAction('settings')">
-            <el-icon><Setting /></el-icon>
-            <span>设置</span>
-          </div>
-          <div class="action-item" @click="handleAction('dashboard')">
-            <el-icon><House /></el-icon>
-            <span>仪表盘</span>
+        <!-- 展开状态 -->
+        <div class="expanded-content" @click.stop>
+          <div class="actions">
+            <div class="action-item" @click="handleAction('restore')">
+              <el-icon><FullScreen /></el-icon>
+              <span>还原</span>
+            </div>
+            <div class="action-item" @click="handleAction('settings')">
+              <el-icon><Setting /></el-icon>
+              <span>设置</span>
+            </div>
+            <div class="action-item" @click="handleAction('dashboard')">
+              <el-icon><House /></el-icon>
+              <span>仪表盘</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
     <!-- 自定义脚本 -->
     <script src="app.js"></script>
   </body>

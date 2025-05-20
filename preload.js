@@ -25,4 +25,5 @@ contextBridge.exposeInMainWorld("electronAPI", {
   toggleFloatWindow: (state) => ipcRenderer.invoke("toggleFloatWindow", state),
   onFloatWindowStateChange: (callback) =>
     ipcRenderer.on("floatWindow-state-changed", callback),
+  moveWindow: (x, y) => ipcRenderer.send("move-window", x, y),
 });
