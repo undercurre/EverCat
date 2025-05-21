@@ -217,7 +217,11 @@ ipcMain.on("move-window", (event, x, y) => {
     x,
     y,
   });
-  floatWindow.setPosition(x, y);
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width, height } = primaryDisplay.workAreaSize;
+  const validatedX = Math.max(0, Math.min(x, width - 250));
+  const validatedY = Math.max(0, Math.min(y, height - 250));
+  floatWindow.setPosition(validatedX, validatedY);
 });
 
 app.on("set-always-on-top", (event, flag) => {

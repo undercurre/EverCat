@@ -14,8 +14,8 @@
         class="mini-window"
         :class="{ 'expanded': isExpanded }"
         @mousedown="handleMouseDown"
-        @mouseenter="handleMouseEnter"
-        @mouseleave="handleMouseLeave"
+        @mousemove="handleMouseMove"
+        @mouseup="handleMouseUp"
       >
         <!-- 折叠状态 -->
         <div class="mini-content">
