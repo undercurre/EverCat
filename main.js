@@ -9,6 +9,7 @@ const {
   Tray,
   Menu,
   screen,
+  remote,
 } = require("electron");
 const path = require("node:path");
 const fs = require("node:fs");
@@ -92,6 +93,10 @@ function createFloatWindow() {
   floatWindow = new BrowserWindow({
     width: 250,
     height: 250,
+    minWidth: 60,
+    minHeight: 60,
+    maxWidth: 60,
+    maxHeight: 60,
     type: "toolbar",
     frame: false,
     resizable: false,
@@ -197,6 +202,13 @@ ipcMain.handle("toggleFloatWindow", (_, state) => {
   }
 });
 
+ipcMain.handle("getFloatWindowPos", () => {
+  if (floatWindow && !floatWindow.isDestroyed()) {
+    return floatWindow.getPosition();
+  }
+  return [0, 0]; // 返回默认值或 null
+});
+
 ipcMain.handle("getFloatWindowState", () => {
   return floatWindow !== null && !floatWindow.isDestroyed();
 });
@@ -212,16 +224,12 @@ app.on("window-drag", (event, { mouseX, mouseY }) => {
 });
 
 // 处理窗口移动
-ipcMain.on("move-window", (event, x, y) => {
+ipcMain.on("move-window", (event, x, y, width, height) => {
   console.info("move-window", {
     x,
     y,
   });
-  const primaryDisplay = screen.getPrimaryDisplay();
-  const { width, height } = primaryDisplay.workAreaSize;
-  const validatedX = Math.max(0, Math.min(x, width - 250));
-  const validatedY = Math.max(0, Math.min(y, height - 250));
-  floatWindow.setPosition(validatedX, validatedY);
+  floatWindow.setBounds({ x, y, width, height });
 });
 
 app.on("set-always-on-top", (event, flag) => {

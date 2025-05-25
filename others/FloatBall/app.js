@@ -17,26 +17,24 @@ const app = createApp({
   // 方法选项
   methods: {
     // 处理鼠标按下事件
-    handleMouseDown(e) {
+    async handleMouseDown(e) {
       if (this.isExpanded) return; // 展开状态不允许拖动
       this.isDragging = true;
-      this.windowInitialX = e.screenX - this.startX;
-      this.windowInitialY = e.screenY - this.startY;
-      this.startX = e.screenX;
-      this.startY = e.screenY;
       this.mouseDownTime = Date.now();
+      this.startX = e.clientX;
+      this.startY = e.clientY;
     },
 
     // 处理鼠标移动事件
     handleMouseMove(e) {
       if (!this.isDragging) return;
-      const deltaX = e.screenX - this.startX;
-      const deltaY = e.screenY - this.startY;
+      const deltaX = e.clientX - this.startX;
+      const deltaY = e.clientY - this.startY;
 
-      const newX = this.windowInitialX + deltaX;
-      const newY = this.windowInitialY + deltaY;
+      const newX = window.screenLeft + deltaX;
+      const newY = window.screenTop + deltaY;
 
-      window.electronAPI.moveWindow(Math.round(newX), Math.round(newY));
+      window.electronAPI.moveWindow(newX, newY, 250, 250);
     },
     handleMouseUp() {
       this.isDragging = false;
@@ -44,6 +42,10 @@ const app = createApp({
       if (Date.now() - this.mouseDownTime < 200) {
         this.toggleExpand();
       }
+    },
+
+    handleMouseLeave() {
+      this.isDragging = false;
     },
     toggleExpand() {
       this.isExpanded = !this.isExpanded;
@@ -58,6 +60,11 @@ const app = createApp({
     todoCount() {
       return this.todos.length;
     },
+  },
+  async mounted() {
+    const pos = await window.electronAPI.getFloatWindowPos();
+    this.windowInitialX = pos[0];
+    this.windowInitialY = pos[1];
   },
 });
 

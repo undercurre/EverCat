@@ -1,16 +1,14 @@
+#floatApp {
+  width: 100vw;
+  height: 100vh;
+}
+
 .mini-window {
-  max-width: 400px !important;
-  max-height: 600px !important;
-  position: relative;
-  margin-left: 125px;
-  margin-top: 109px;
   width: 50px;
   height: 50px;
-  border-radius: 25px;
-  background: #fff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-  overflow: hidden;
+  background-color: #fff;
+  border-radius: 50%;
+  cursor: move;
   user-select: none;
 }
 
@@ -18,7 +16,7 @@
   width: 160px;
   height: 150px;
   border-radius: 12px;
-  transform: translate(-110px, -100px);
+  transform: translate(-55px, -75px);
 }
 
 .mini-window.expanded .mini-content {
