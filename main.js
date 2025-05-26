@@ -91,12 +91,12 @@ const createWindow = () => {
 
 function createFloatWindow() {
   floatWindow = new BrowserWindow({
-    width: 250,
-    height: 250,
-    minWidth: 60,
-    minHeight: 60,
-    maxWidth: 60,
-    maxHeight: 60,
+    width: 170,
+    height: 170,
+    minWidth: 170,
+    minHeight: 170,
+    maxWidth: 170,
+    maxHeight: 170,
     type: "toolbar",
     frame: false,
     resizable: false,

@@ -1,6 +1,8 @@
 #floatApp {
   width: 100vw;
   height: 100vh;
+  background-color: transparent;
+  position: relative;
 }
 
 .mini-window {
@@ -10,13 +12,18 @@
   border-radius: 50%;
   cursor: move;
   user-select: none;
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
 }
 
 .mini-window.expanded {
   width: 160px;
   height: 150px;
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
   border-radius: 12px;
-  transform: translate(-55px, -75px);
 }
 
 .mini-window.expanded .mini-content {

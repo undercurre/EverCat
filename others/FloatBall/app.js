@@ -34,7 +34,7 @@ const app = createApp({
       const newX = window.screenLeft + deltaX;
       const newY = window.screenTop + deltaY;
 
-      window.electronAPI.moveWindow(newX, newY, 250, 250);
+      window.electronAPI.moveWindow(newX, newY, 170, 170);
     },
     handleMouseUp() {
       this.isDragging = false;
