@@ -209,6 +209,14 @@ ipcMain.handle("getFloatWindowPos", () => {
   return [0, 0]; // 返回默认值或 null
 });
 
+ipcMain.on("window-drag", (event, width, height) => {
+  const { x, y } = screen.getCursorScreenPoint();
+  let newX = x - (170 - 25);
+  let newY = y - (170 - 25);
+
+  floatWindow.setBounds({ x: newX, y: newY, width, height });
+});
+
 ipcMain.handle("getFloatWindowState", () => {
   return floatWindow !== null && !floatWindow.isDestroyed();
 });
