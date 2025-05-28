@@ -12,6 +12,18 @@ const app = createApp({
       windowInitialX: 0,
       windowInitialY: 0,
       mouseDownTime: Date.now(),
+      modes: {
+        WORK: {
+          label: "工作钟",
+          duration: 60 * 60, // 1小时
+          color: "#00adb5",
+        },
+        BREAK: {
+          label: "休息钟",
+          duration: 10 * 60, // 10分钟
+          color: "#4CAF50",
+        },
+      },
     };
   },
   // 方法选项
@@ -62,9 +74,38 @@ const app = createApp({
     toggleExpand() {
       this.isExpanded = !this.isExpanded;
     },
-    handleAction() {
-      console.log("执行操作");
+    handleAction(type) {
+      switch (type) {
+        case "work":
+          console.info("开始工作");
+          this.startTimer(this.modes.WORK);
+          break;
+        case "rest":
+          console.info("开始休息");
+          this.startTimer(this.modes.BREAK);
+          break;
+      }
       this.toggleExpand();
+    },
+    startTimer(mode) {
+      currentMode.value = mode;
+      totalSeconds.value = mode.duration;
+      // 没有endTimestamp时，直接设置remainingSeconds
+      if (!endTimestamp.value) {
+        remainingSeconds.value = totalSeconds.value;
+        // 计算endTimestamp
+        endTimestamp.value = Date.now() + totalSeconds.value * 1000;
+      }
+      isStarted.value = true;
+
+      timer = setInterval(() => {
+        if (remainingSeconds.value <= 0) {
+          isEnded.value = true;
+          clearInterval(timer);
+          return;
+        }
+        remainingSeconds.value--;
+      }, 1000);
     },
   },
   // 计算属性
@@ -77,6 +118,9 @@ const app = createApp({
     const pos = await window.electronAPI.getFloatWindowPos();
     this.windowInitialX = pos[0];
     this.windowInitialY = pos[1];
+    window.electronAPI.onDataUpdated((key, value) => {
+      console.log(`数据已更新: ${key} =>`, value);
+    });
   },
 });
 

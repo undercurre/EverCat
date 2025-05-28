@@ -9,13 +9,18 @@ const {
   Tray,
   Menu,
   screen,
-  remote,
 } = require("electron");
 const path = require("node:path");
 const fs = require("node:fs");
+const low = require("lowdb");
+const FileSync = require("lowdb/adapters/FileSync");
 
 const documentsPath = app.getPath("documents");
 let logFolderPath = path.join(documentsPath, "EverCat"); // 使用path.join代替字符串拼接
+
+const userDataPath = app.getPath("userData");
+const adapter = new FileSync(path.join(userDataPath, "db.json"));
+const db = low(adapter);
 
 let tray = null;
 let mainWindow = null;
@@ -202,6 +207,18 @@ ipcMain.handle("toggleFloatWindow", (_, state) => {
   }
 });
 
+// 监听渲染进程的数据存储请求
+ipcMain.handle("store-set", (_, key, value) => {
+  store.set(key, value);
+  // 通知所有窗口更新数据
+  mainWindow.webContents.send("data-updated", key, value);
+  floatWindow.webContents.send("data-updated", key, value);
+});
+
+ipcMain.handle("store-get", (_, key) => {
+  return store.get(key);
+});
+
 ipcMain.handle("getFloatWindowPos", () => {
   if (floatWindow && !floatWindow.isDestroyed()) {
     return floatWindow.getPosition();
@@ -233,10 +250,6 @@ app.on("window-drag", (event, { mouseX, mouseY }) => {
 
 // 处理窗口移动
 ipcMain.on("move-window", (event, x, y, width, height) => {
-  console.info("move-window", {
-    x,
-    y,
-  });
   floatWindow.setBounds({ x, y, width, height });
 });
 

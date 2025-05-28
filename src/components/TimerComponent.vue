@@ -72,7 +72,7 @@ const STORAGE_KEY = "timerState";
 
 function loadState() {
   try {
-    const storedData = localStorage.getItem(STORAGE_KEY);
+    const storedData = window.electronAPI.getStore(STORAGE_KEY);
     if (storedData) {
       const saved = JSON.parse(storedData);
       currentMode.value =
@@ -104,7 +104,7 @@ function saveState() {
     isStarted: isStarted.value,
     isEnded: isEnded.value,
   };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  window.electronAPI.setStore(STORAGE_KEY, JSON.stringify(state));
 }
 
 function resetTimer() {
@@ -131,6 +131,7 @@ function startTimer(mode) {
     // 计算endTimestamp
     endTimestamp.value = Date.now() + totalSeconds.value * 1000;
   }
+  saveState();
   isStarted.value = true;
 
   timer = setInterval(() => {

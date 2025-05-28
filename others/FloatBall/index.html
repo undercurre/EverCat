@@ -27,17 +27,17 @@
         <!-- 展开状态 -->
         <div class="expanded-content" @click.stop>
           <div class="actions">
-            <div class="action-item" @click="handleAction('restore')">
-              <el-icon><FullScreen /></el-icon>
-              <span>还原</span>
-            </div>
-            <div class="action-item" @click="handleAction('settings')">
+            <div class="action-item" @click="handleAction('work')">
               <el-icon><Setting /></el-icon>
-              <span>设置</span>
+              <span>work</span>
             </div>
-            <div class="action-item" @click="handleAction('dashboard')">
+            <div class="action-item" @click="handleAction('test')">
               <el-icon><House /></el-icon>
-              <span>仪表盘</span>
+              <span>rest</span>
+            </div>
+            <div class="action-item" @click="handleAction('reset')">
+              <el-icon><House /></el-icon>
+              <span>reset</span>
             </div>
           </div>
         </div>
