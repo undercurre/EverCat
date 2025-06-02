@@ -12,15 +12,12 @@ const {
 } = require("electron");
 const path = require("node:path");
 const fs = require("node:fs");
-const low = require("lowdb");
-const FileSync = require("lowdb/adapters/FileSync");
+const SQLiteStore = require("./lib/SQLiteStore.js");
+
+const store = new SQLiteStore({ name: "user-settings" });
 
 const documentsPath = app.getPath("documents");
 let logFolderPath = path.join(documentsPath, "EverCat"); // 使用path.join代替字符串拼接
-
-const userDataPath = app.getPath("userData");
-const adapter = new FileSync(path.join(userDataPath, "db.json"));
-const db = low(adapter);
 
 let tray = null;
 let mainWindow = null;
@@ -237,6 +234,16 @@ ipcMain.on("window-drag", (event, width, height) => {
 ipcMain.handle("getFloatWindowState", () => {
   return floatWindow !== null && !floatWindow.isDestroyed();
 });
+
+ipcMain.handle("store:set", async (event, key, value) => {
+  await store.set(key, value);
+  // 广播变更到所有窗口 :cite[2]
+  BrowserWindow.getAllWindows().forEach((win) => {
+    win.webContents.send("store:updated", key, value);
+  });
+});
+
+ipcMain.handle("store:get", (event, key) => store.get(key));
 
 ipcMain.on("floatWindow-state-changed", (event, state) => {
   mainWindow.webContents.send("floatWindow-state-changed", state);

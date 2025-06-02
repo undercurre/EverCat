@@ -29,19 +29,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   dragWindow: (width, height) => ipcRenderer.send("window-drag", width, height),
   moveWindow: (x, y, width, height) =>
     ipcRenderer.send("move-window", x, y, width, height),
-  setStore: (key, value) => ipcRenderer.send("store-set", key, value),
-  getStore: (key) => ipcRenderer.invoke("store-get", key),
-
+  setStore: (key, value) => ipcRenderer.invoke("store:set", key, value),
+  getStore: (key) => ipcRenderer.invoke("store:get", key),
   onDataUpdated: (callback) => {
-    // 安全地包装回调函数
-    const safeCallback = (_, ...args) => callback(...args);
-
-    // 监听主进程发送的数据更新事件
-    ipcRenderer.on("data-updated", safeCallback);
-
-    // 提供清理函数
-    return () => {
-      ipcRenderer.off("data-updated", safeCallback);
-    };
+    ipcRenderer.on("store:updated", (_, key, value) => callback(key, value));
   },
 });
