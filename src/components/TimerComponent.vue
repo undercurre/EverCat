@@ -70,9 +70,9 @@ let timer = null;
 
 const STORAGE_KEY = "timerState";
 
-function loadState() {
+async function loadState() {
   try {
-    const storedData = window.electronAPI.getStore(STORAGE_KEY);
+    const storedData = await window.electronAPI.getStore(STORAGE_KEY);
     if (storedData) {
       const saved = JSON.parse(storedData);
       currentMode.value =
