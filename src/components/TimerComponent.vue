@@ -109,6 +109,7 @@ function saveState() {
 
 function resetTimer() {
   clearInterval(timer);
+  timer = null;
   currentMode.value = modes.WORK;
   endTimestamp.value = null;
   remainingSeconds.value = currentMode.value.duration;
@@ -118,11 +119,10 @@ function resetTimer() {
   saveState(); // 重置后立即保存状态
 }
 
-// 组件挂载时加载状态
-onMounted(loadState);
-
 // 修改后的开始计时方法
 function startTimer(mode) {
+  clearInterval(timer);
+  timer = null;
   currentMode.value = mode;
   totalSeconds.value = mode.duration;
   // 没有endTimestamp时，直接设置remainingSeconds
@@ -138,6 +138,7 @@ function startTimer(mode) {
     if (remainingSeconds.value <= 0) {
       isEnded.value = true;
       clearInterval(timer);
+      timer = null;
       return;
     }
     remainingSeconds.value--;
@@ -162,9 +163,18 @@ const minutes = computed(() =>
 );
 const seconds = computed(() => remainingSeconds.value % 60);
 
+onMounted(async () => {
+  loadState();
+  window.electronAPI.onDataUpdated((key, value) => {
+    console.log(`数据已更新: ${key} =>`, value);
+    loadState();
+  });
+});
+
 onUnmounted(() => {
   saveState();
   clearInterval(timer);
+  timer = null;
 });
 </script>
 

@@ -36,26 +36,22 @@ const app = createApp({
     let timer = null;
 
     async function handleMouseDown(e) {
-      console.log("鼠标按下");
       if (isExpanded.value) return; // 展开状态不允许拖动
       isDragging.value = true;
       mouseDownTime.value = Date.now();
     }
 
     async function handleMouseOver(e) {
-      console.log("鼠标悬浮");
       if (isExpanded.value || !isDragging.value) return; // 展开状态不允许拖动
     }
 
     // 处理鼠标移动事件
     function handleMouseMove(e) {
-      console.log("鼠标移动", isDragging.value);
       if (!isDragging.value) return;
       window.electronAPI.dragWindow(170, 170);
     }
 
     function handleMouseUp() {
-      console.log("鼠标松开");
       isDragging.value = false;
       // 如果不是拖拽且点击时间小于200ms，则触发展开/收起
       if (Date.now() - mouseDownTime.value < 200) {
@@ -63,9 +59,7 @@ const app = createApp({
       }
     }
 
-    function handleMouseLeave() {
-      console.log("鼠标离开");
-    }
+    function handleMouseLeave() {}
 
     function toggleExpand() {
       isExpanded.value = !isExpanded.value;
@@ -74,15 +68,12 @@ const app = createApp({
     function handleAction(type) {
       switch (type) {
         case "work":
-          console.info("开始工作");
           startTimer(modes.WORK);
           break;
         case "rest":
-          console.info("开始休息");
           startTimer(modes.BREAK);
           break;
         case "reset":
-          console.info("重新开始");
           resetTimer();
           break;
       }
@@ -133,6 +124,7 @@ const app = createApp({
 
     function resetTimer() {
       clearInterval(timer);
+      timer = null;
       currentMode.value = modes.WORK;
       endTimestamp.value = null;
       remainingSeconds.value = currentMode.value.duration;
@@ -143,8 +135,11 @@ const app = createApp({
     }
 
     function startTimer(mode) {
+      clearInterval(timer);
+      timer = null;
       currentMode.value = mode;
       totalSeconds.value = mode.duration;
+      console.info(remainingSeconds.value, endTimestamp.value);
       // 没有endTimestamp时，直接设置remainingSeconds
       if (!endTimestamp.value) {
         remainingSeconds.value = totalSeconds.value;
@@ -158,6 +153,7 @@ const app = createApp({
         if (remainingSeconds.value <= 0) {
           isEnded.value = true;
           clearInterval(timer);
+          timer = null;
           return;
         }
         remainingSeconds.value--;
@@ -195,6 +191,7 @@ const app = createApp({
     onUnmounted(() => {
       saveState();
       clearInterval(timer);
+      timer = null;
     });
 
     return {
