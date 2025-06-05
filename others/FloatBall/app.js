@@ -69,9 +69,11 @@ const app = createApp({
       switch (type) {
         case "work":
           startTimer(modes.WORK);
+          saveState();
           break;
         case "rest":
           startTimer(modes.BREAK);
+          saveState();
           break;
         case "reset":
           resetTimer();
@@ -146,9 +148,7 @@ const app = createApp({
         // 计算endTimestamp
         endTimestamp.value = Date.now() + totalSeconds.value * 1000;
       }
-      saveState();
       isStarted.value = true;
-      console.info("开始计时");
       timer = setInterval(() => {
         if (remainingSeconds.value <= 0) {
           isEnded.value = true;
@@ -176,6 +176,12 @@ const app = createApp({
       Math.floor((remainingSeconds.value % 3600) / 60)
     );
     const seconds = computed(() => remainingSeconds.value % 60);
+
+    const percentage = computed(() => {
+      return Math.floor(
+        (1 - remainingSeconds.value / totalSeconds.value) * 100
+      );
+    });
 
     onMounted(async () => {
       loadState();
@@ -218,6 +224,7 @@ const app = createApp({
       handleAction,
       loadState,
       saveState,
+      percentage,
     };
   },
 });

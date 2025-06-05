@@ -5,21 +5,21 @@
     <div class="control-buttons">
       <button
         v-if="!isStarted"
-        @click="startTimer(modes.WORK)"
+        @click="handleAction('work')"
         class="mode-btn work"
       >
         开始工作
       </button>
       <button
         v-if="!isStarted"
-        @click="startTimer(modes.BREAK)"
+        @click="handleAction('rest')"
         class="mode-btn break"
       >
         休息一下
       </button>
       <button
         v-if="isStarted || isEnded"
-        @click="resetTimer"
+        @click="handleAction('reset')"
         class="mode-btn restart"
       >
         重新开始
@@ -69,6 +69,23 @@ const isEnded = ref(false);
 let timer = null;
 
 const STORAGE_KEY = "timerState";
+
+function handleAction(type) {
+  switch (type) {
+    case "work":
+      startTimer(modes.WORK);
+      saveState();
+      break;
+    case "rest":
+      startTimer(modes.BREAK);
+      saveState();
+      break;
+    case "reset":
+      resetTimer();
+      break;
+  }
+  toggleExpand();
+}
 
 async function loadState() {
   try {
@@ -131,9 +148,7 @@ function startTimer(mode) {
     // 计算endTimestamp
     endTimestamp.value = Date.now() + totalSeconds.value * 1000;
   }
-  saveState();
   isStarted.value = true;
-
   timer = setInterval(() => {
     if (remainingSeconds.value <= 0) {
       isEnded.value = true;
