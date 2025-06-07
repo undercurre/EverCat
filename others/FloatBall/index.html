@@ -23,6 +23,12 @@
         <div class="mini-content">
           <span class="mini-bg" :style="{background: currentMode.color}">
             <span>{{percentage}}</span>
+            <div
+              class="wave"
+              :style="{
+              top: `${(1 - (percentage / 100)) * 40}px`,
+            }"
+            ></div>
           </span>
         </div>
 
